@@ -34,8 +34,8 @@ namespace AlphaKilo_GameJam32
 
             // Chargement de la musisque
             music = AssetManager.musicGamePlay;
-            MediaPlayer.Play(music);
-            MediaPlayer.IsRepeating = true;
+                //MediaPlayer.Play(music);
+                //MediaPlayer.IsRepeating = true;
 
             // Chargement des sons
             sndExplode = mainGame.Content.Load<SoundEffect>("_Sounds_/explode");
@@ -44,19 +44,19 @@ namespace AlphaKilo_GameJam32
             for (int i = 0 ; i < 20 ; i++)
             {
                 // Instanciation de l'objet
-                meteor = new Meteor(mainGame.Content.Load<Texture2D>("_Images_/meteor"));
+                meteor = new Meteor(mainGame.Content.Load<Texture2D>("_Images_/ennemis"));
 
                 // Initialisation de la position
                 meteor.position = new Vector2(
                     Tools.RandomInt(1 , Screen.Width - meteor.texture.Width),
-                    Tools.RandomInt(1, Screen.Height - meteor.texture.Height));
+                    Tools.RandomInt(1, 50));
 
                 // Ajouter à la liste de Sprites
                 listActors.Add(meteor);
             }
 
             // Création du héro (vaisseau / ship)
-            MyShip = new Hero(mainGame.Content.Load<Texture2D>("_Images_/ship"));
+            MyShip = new Hero(mainGame.Content.Load<Texture2D>("_Images_/car"));
             MyShip.position = new Vector2((Screen.Width/2) - MyShip.texture.Width/2, (Screen.Height/2) - MyShip.texture.Height/2);
 
             // Ajouter à la liste de Sprites
@@ -179,9 +179,7 @@ namespace AlphaKilo_GameJam32
 
         public override void Draw(GameTime gameTime)
         {
-
             mainGame._spriteBatch.DrawString(AssetManager.mainFont, "AlphaKilo Template - Energy:  "+MyShip.energy, new Vector2((Screen.Width/2) - 200, 20), Color.White);
-
             base.Draw(gameTime);
         }
     }

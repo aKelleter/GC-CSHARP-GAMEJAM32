@@ -32,7 +32,7 @@
 /processorParam:TextureFormat=Color
 /build:_Images_/button.png
 
-#begin _Images_/meteor.png
+#begin _Images_/car.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -42,9 +42,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:_Images_/meteor.png
+/build:_Images_/car.png
 
-#begin _Images_/ship.png
+#begin _Images_/ennemis.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -54,7 +54,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:_Images_/ship.png
+/build:_Images_/ennemis.png
+
+#begin _Images_/tir_hero.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:_Images_/tir_hero.png
 
 #begin _Sounds_/cool.mp3
 /importer:Mp3Importer

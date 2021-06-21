@@ -34,8 +34,8 @@ namespace AlphaKilo_GameJam32
 
             // Chargement de la musique
             music = mainGame.Content.Load<Song>("_Sounds_/cool");
-            MediaPlayer.Play(music);
-            MediaPlayer.IsRepeating = true;
+                //MediaPlayer.Play(music);
+                //MediaPlayer.IsRepeating = true;
 
             // Sauvegardes des Etats
             oldKBState = Keyboard.GetState();
@@ -129,10 +129,9 @@ namespace AlphaKilo_GameJam32
 
         public override void Draw(GameTime gameTime)
         {
-      
-            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Game Menu", new Vector2((ScreenWidth/2)-60, 5), Color.White);
-
+            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Game Menu", new Vector2((ScreenWidth / 2) - 60, 5), Color.White);
             base.Draw(gameTime);
+           
         }
     }
 }

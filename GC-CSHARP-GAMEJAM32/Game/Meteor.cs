@@ -15,14 +15,15 @@ namespace AlphaKilo_GameJam32
         {
             
             // Initialisation de la vélocité 
+            /*
             do
             {
                 Velocity_X = (float)Tools.RandomInt(-3, 3) / 5;
             } while (Velocity_X == 0);
-
+            */
             do
             {
-                Velocity_Y = (float)Tools.RandomInt(-3, 3) / 5;
+                Velocity_Y = (float)Tools.RandomInt(3, 6) / 5;
             } while (Velocity_Y == 0);
 
         }
