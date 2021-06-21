@@ -14,7 +14,7 @@ namespace AlphaKilo_GameJam32
     {
         private KeyboardState oldKBState;
         private Hero MyShip;
-        private Meteor meteor;
+        private Ennemis meteor;
         private Rectangle Screen;
         private Song music;
         private SoundEffect sndExplode;
@@ -44,7 +44,7 @@ namespace AlphaKilo_GameJam32
             for (int i = 0 ; i < 20 ; i++)
             {
                 // Instanciation de l'objet
-                meteor = new Meteor(mainGame.Content.Load<Texture2D>("_Images_/ennemis"));
+                meteor = new Ennemis(mainGame.Content.Load<Texture2D>("_Images_/ennemis"));
 
                 // Initialisation de la position
                 meteor.position = new Vector2(
@@ -119,7 +119,7 @@ namespace AlphaKilo_GameJam32
 
                 //Debug.WriteLine("Type {0}", item.GetType());
                
-                if (actor is Meteor m)
+                if (actor is Ennemis m)
                 {
                     if (m.position.X > Screen.Width - m.texture.Width)
                     {

@@ -8,10 +8,10 @@ using System.Diagnostics;
 
 namespace AlphaKilo_GameJam32
 {
-    public class Meteor : Sprite
+    public class Ennemis : Sprite
     {
         
-        public Meteor(Texture2D pTexture) : base(pTexture)
+        public Ennemis(Texture2D pTexture) : base(pTexture)
         {
             
             // Initialisation de la vélocité 

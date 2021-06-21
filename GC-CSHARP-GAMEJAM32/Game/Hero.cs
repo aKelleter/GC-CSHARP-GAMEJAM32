@@ -17,7 +17,7 @@ namespace AlphaKilo_GameJam32
         }
         public override void TouchedBy(IActor pActor)   
         {
-            if(pActor is Meteor)
+            if(pActor is Ennemis)
             {
                 energy -= 10.0f;
             }
