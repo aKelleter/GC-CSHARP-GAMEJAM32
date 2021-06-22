@@ -102,12 +102,12 @@ namespace AlphaKilo_GameJam32
             // Contrôler les mouvements de MyHero
             if(newKBState.IsKeyDown(Keys.Left))
             {
-                if(MyHero.position.X > 0)
+                if(MyHero.position.X > 220)
                     MyHero.Move(-5, 0); 
             }
             if (newKBState.IsKeyDown(Keys.Right))
             {
-                if (MyHero.position.X < Screen.Width - MyHero.texture.Width)
+                if (MyHero.position.X < Screen.Width - MyHero.texture.Width -220)
                     MyHero.Move(+5, 0);
             }
             if (newKBState.IsKeyDown(Keys.Up))
