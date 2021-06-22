@@ -62,7 +62,7 @@ namespace AlphaKilo_GameJam32
                 // Initialisation de la position
                 MyEnnemi.position = new Vector2(
                         Tools.RandomInt(230, Screen.Width - MyEnnemi.texture.Width - 230),
-                        Tools.RandomInt(50, 50));
+                        Tools.RandomInt(50, 65));
                 // Ajoute l'ennemi à la liste
                 listActors.Add(MyEnnemi);
             }
@@ -112,12 +112,12 @@ namespace AlphaKilo_GameJam32
             }
             if (newKBState.IsKeyDown(Keys.Up))
             {
-                if (MyHero.position.Y > 0)
+                if (MyHero.position.Y > 70)
                     MyHero.Move(0, -5);
             }
             if (newKBState.IsKeyDown(Keys.Down))
             {
-                if (MyHero.position.Y < Screen.Height - MyHero.texture.Height)
+                if (MyHero.position.Y < Screen.Height - MyHero.texture.Height - 20)
                     MyHero.Move(0, +5);
             }
 
@@ -206,7 +206,8 @@ namespace AlphaKilo_GameJam32
         public override void Draw(GameTime gameTime)
         {
             mainGame._spriteBatch.Draw(World.texture, new Vector2(World.position.X, World.position.Y), Color.White);
-            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Energy:  "+MyHero.energy, new Vector2(50, 20), Color.White);            
+            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Energy:  "+MyHero.energy, new Vector2(50, 20), Color.White);  
+            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "V " + mainGame.strVersion, new Vector2(Screen.Width-140, Screen.Height - 50), new Color(.2f, .4f, .3f, .1f));
             base.Draw(gameTime);
         }
     }

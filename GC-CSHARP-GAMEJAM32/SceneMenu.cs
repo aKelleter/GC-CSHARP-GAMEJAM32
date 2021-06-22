@@ -15,6 +15,7 @@ namespace AlphaKilo_GameJam32
         private KeyboardState oldKBState;
         private GamePadState oldGPADState;
         private Button buttonGamePlay;
+        private Sprite MenuBackgr;
         private int ScreenWidth, ScreenHeight;
         private Song music;
 
@@ -44,12 +45,16 @@ namespace AlphaKilo_GameJam32
             // Taille de l'écran
             ScreenWidth = Tools.ScreenSize(mainGame.Window.ClientBounds, Tools.SizeScreenType.Width);
             ScreenHeight = Tools.ScreenSize(mainGame.Window.ClientBounds, Tools.SizeScreenType.Height);
-            
+
+            // Création du background de l'interface Utilisateur
+            MenuBackgr = new Sprite(mainGame.Content.Load<Texture2D>("_Images_/menu-background"));
+            MenuBackgr.position = new Vector2(1, 1);
+
             // Initialisation du bouton de GamePlay
-            buttonGamePlay = new Button(mainGame.Content.Load<Texture2D>("_Images_/button"));
+            buttonGamePlay = new Button(mainGame.Content.Load<Texture2D>("_Images_/btn-play"));
 
             // Positionnement du bouton
-            buttonGamePlay.position = new Vector2((ScreenWidth/2) - buttonGamePlay.texture.Width/2, (ScreenHeight/2) - buttonGamePlay.texture.Height/2);
+            buttonGamePlay.position = new Vector2(50, (ScreenHeight/2) - buttonGamePlay.texture.Height/2);
             
             // Action sur le click du bouton
             buttonGamePlay.onClick = onCLickPlay;
@@ -129,7 +134,9 @@ namespace AlphaKilo_GameJam32
 
         public override void Draw(GameTime gameTime)
         {
-            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Game Menu", new Vector2((ScreenWidth / 2) - 60, 5), Color.White);
+            mainGame._spriteBatch.Draw(MenuBackgr.texture, new Vector2(MenuBackgr.position.X, MenuBackgr.position.Y), Color.White);
+            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Or press Enter key", new Vector2(70, ScreenHeight / 2 + 20), new Color(.5f, .7f, .1f, 1.0f));
+            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "V " + mainGame.strVersion, new Vector2(ScreenWidth-100, ScreenHeight - 50), new Color(.2f, .3f, .4f, 1.0f));
             base.Draw(gameTime);
            
         }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Diagnostics;
 
 namespace AlphaKilo_GameJam32
@@ -10,6 +11,7 @@ namespace AlphaKilo_GameJam32
         public GraphicsDeviceManager _graphics;
         public SpriteBatch _spriteBatch;
         public GameState gameState;
+        public String strVersion = "0.0.1";
 
         public RenderTarget2D render;
         private int TargetWidth = 1024;

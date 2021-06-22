@@ -13,14 +13,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin _Fonts_/MainFont.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:_Fonts_/MainFont.spritefont
-
-#begin _Images_/button.png
+#begin ../../_SRC/world-the-bridge-of-hell-2097.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -30,7 +23,26 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:_Images_/button.png
+/build:../../_SRC/world-the-bridge-of-hell-2097.jpg;_Images_/ui-background.jpg
+
+#begin _Fonts_/MainFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:_Fonts_/MainFont.spritefont
+
+#begin _Images_/btn-play.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:_Images_/btn-play.png
 
 #begin _Images_/car.png
 /importer:TextureImporter
@@ -56,6 +68,18 @@
 /processorParam:TextureFormat=Color
 /build:_Images_/ennemis.png
 
+#begin _Images_/menu-the-bridge-of-hell-2097 copie.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:_Images_/menu-the-bridge-of-hell-2097 copie.jpg;_Images_/menu-background.jpg
+
 #begin _Images_/tir_hero.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -67,18 +91,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:_Images_/tir_hero.png
-
-#begin _Images_/ui-background.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:_Images_/ui-background.jpg
 
 #begin _Sounds_/cool.mp3
 /importer:Mp3Importer
