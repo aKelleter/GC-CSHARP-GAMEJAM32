@@ -10,7 +10,7 @@ namespace AlphaKilo_GameJam32
 {
     public class Ennemis : Sprite
     {
-        
+ 
         public Ennemis(Texture2D pTexture) : base(pTexture)
         {
             
@@ -23,9 +23,12 @@ namespace AlphaKilo_GameJam32
             */
             do
             {
-                Velocity_Y = (float)Tools.RandomInt(3, 6) / 5;
+                Velocity_Y = (float)Tools.RandomInt(1, 6) / 5;
             } while (Velocity_Y == 0);
 
+            
+
         }
+
     }
 }
