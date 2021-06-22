@@ -7,17 +7,20 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Timers;
 
 namespace AlphaKilo_GameJam32
 {
     public class SceneGamePlay : Scene
     {
         private KeyboardState oldKBState;
-        private Hero MyShip;
-        private Ennemis meteor;
+        private Hero MyHero;
+        private Ennemis MyEnnemi;
+        private Sprite World;
         private Rectangle Screen;
         private Song music;
         private SoundEffect sndExplode;
+     
         public SceneGamePlay(MainGame pGame) : base(pGame)
         {
             Debug.WriteLine("New SceneGamePlay");
@@ -40,27 +43,32 @@ namespace AlphaKilo_GameJam32
             // Chargement des sons
             sndExplode = mainGame.Content.Load<SoundEffect>("_Sounds_/explode");
 
-            // Création d'une liste de Météors
-            for (int i = 0 ; i < 20 ; i++)
+            // Création du background de l'interface Utilisateur
+            World = new Sprite(mainGame.Content.Load<Texture2D>("_Images_/ui-background"));
+            World.position = new Vector2(1, 1);
+
+            // Création du héro (car)
+            MyHero = new Hero(mainGame.Content.Load<Texture2D>("_Images_/car"));
+            MyHero.position = new Vector2((Screen.Width/2) - MyHero.texture.Width/2, (Screen.Height-100) - MyHero.texture.Height/2);
+            // Ajouter à la liste de Sprites
+            listActors.Add(MyHero);
+
+            for (int i = 0; i < 20; i++)
             {
+                // Création des Ennemis 
                 // Instanciation de l'objet
-                meteor = new Ennemis(mainGame.Content.Load<Texture2D>("_Images_/ennemis"));
+                MyEnnemi = new Ennemis(mainGame.Content.Load<Texture2D>("_Images_/Ennemis"));
 
                 // Initialisation de la position
-                meteor.position = new Vector2(
-                    Tools.RandomInt(1 , Screen.Width - meteor.texture.Width),
-                    Tools.RandomInt(1, 50));
-
-                // Ajouter à la liste de Sprites
-                listActors.Add(meteor);
+                MyEnnemi.position = new Vector2(
+                        Tools.RandomInt(230, Screen.Width - MyEnnemi.texture.Width - 230),
+                        Tools.RandomInt(50, 50));
+                // Ajoute l'ennemi à la liste
+                listActors.Add(MyEnnemi);
             }
 
-            // Création du héro (vaisseau / ship)
-            MyShip = new Hero(mainGame.Content.Load<Texture2D>("_Images_/car"));
-            MyShip.position = new Vector2((Screen.Width/2) - MyShip.texture.Width/2, (Screen.Height/2) - MyShip.texture.Height/2);
 
-            // Ajouter à la liste de Sprites
-            listActors.Add(MyShip);
+            
 
             // Chargement du Load() de Scene
             base.Load();
@@ -91,29 +99,40 @@ namespace AlphaKilo_GameJam32
                 mainGame.gameState.ChangeScene(GameState.SceneType.Menu);
             }
 
-            // Contrôler les mouvements de MyShip
+            // Contrôler les mouvements de MyHero
             if(newKBState.IsKeyDown(Keys.Left))
             {
-                if(MyShip.position.X > 0)
-                    MyShip.Move(-5, 0); 
+                if(MyHero.position.X > 0)
+                    MyHero.Move(-5, 0); 
             }
             if (newKBState.IsKeyDown(Keys.Right))
             {
-                if (MyShip.position.X < Screen.Width - MyShip.texture.Width)
-                    MyShip.Move(+5, 0);
+                if (MyHero.position.X < Screen.Width - MyHero.texture.Width)
+                    MyHero.Move(+5, 0);
             }
             if (newKBState.IsKeyDown(Keys.Up))
             {
-                if (MyShip.position.Y > 0)
-                    MyShip.Move(0, -5);
+                if (MyHero.position.Y > 0)
+                    MyHero.Move(0, -5);
             }
             if (newKBState.IsKeyDown(Keys.Down))
             {
-                if (MyShip.position.Y < Screen.Height - MyShip.texture.Height)
-                    MyShip.Move(0, +5);
+                if (MyHero.position.Y < Screen.Height - MyHero.texture.Height)
+                    MyHero.Move(0, +5);
             }
 
-            // Empêche les Météors de sortir du jeu
+            // Ajoute des ennemis
+           
+
+            if (MyHero.energy > 30)
+            {
+                                
+                
+
+                
+            }
+
+            // Empêche les Ennemis de l'aire de jeu
             foreach (IActor actor in listActors)
             {
 
@@ -121,6 +140,7 @@ namespace AlphaKilo_GameJam32
                
                 if (actor is Ennemis m)
                 {
+                    /*
                     if (m.position.X > Screen.Width - m.texture.Width)
                     {
                         m.Velocity_X = 0 - m.Velocity_X;
@@ -132,31 +152,32 @@ namespace AlphaKilo_GameJam32
                         m.Velocity_X = 0 - m.Velocity_X;
                         m.position = new Vector2(0, m.position.Y);
                     }
+                    */
 
-                    if (m.position.Y > Screen.Height - m.texture.Height)
+                    if (m.position.Y > Screen.Height - m.texture.Height - 25)
                     {
-                        m.Velocity_Y = 0 - m.Velocity_Y;
-                        m.position = new Vector2(m.position.X, Screen.Height - m.texture.Height);
+                        //m.Velocity_Y = 0 - m.Velocity_Y;
+                        m.position = new Vector2(m.position.X, Screen.Height + m.texture.Height);
 
                     }
 
-                    if (m.position.Y < 0)
+                    if (m.position.Y < 50)
                     {
                         m.Velocity_Y = 0 - m.Velocity_Y;
                         m.position = new Vector2(m.position.X, 0);
                     }
 
-                    if (Tools.CollideByBox(m, MyShip))
+                    if (Tools.CollideByBox(m, MyHero))
                     {
-                        MyShip.TouchedBy(m);
-                        m.TouchedBy(MyShip);
+                        MyHero.TouchedBy(m);
+                        m.TouchedBy(MyHero);
                         m.ToRemove = true;
                         sndExplode.Play();
                         
                     }                   
                 }
 
-                if (MyShip.energy <= 0)
+                if (MyHero.energy <= 0)
                 {
                     mainGame.gameState.ChangeScene(GameState.SceneType.Gameover);
                 }
@@ -177,9 +198,15 @@ namespace AlphaKilo_GameJam32
             base.Update(gameTime);
         }
 
+        private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            Debug.WriteLine("The Elapsed event was raised at {0}", e.SignalTime);
+        }
+
         public override void Draw(GameTime gameTime)
         {
-            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "AlphaKilo Template - Energy:  "+MyShip.energy, new Vector2((Screen.Width/2) - 200, 20), Color.White);
+            mainGame._spriteBatch.Draw(World.texture, new Vector2(World.position.X, World.position.Y), Color.White);
+            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Energy:  "+MyHero.energy, new Vector2(50, 20), Color.White);            
             base.Draw(gameTime);
         }
     }

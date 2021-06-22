@@ -5,12 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using System.Timers;
+using System.Threading.Tasks;
 
 namespace AlphaKilo_GameJam32
 {
     class Tools
     {
         static Random randomGen = new Random();
+        private static System.Timers.Timer aTimer;
         public enum SizeScreenType
         {
             Width,
@@ -76,6 +79,8 @@ namespace AlphaKilo_GameJam32
         {
             return Math.Atan2(y2 - y1, x2 - x1);
         }
+
     }
 }
+
 
