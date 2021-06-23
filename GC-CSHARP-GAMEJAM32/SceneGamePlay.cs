@@ -45,7 +45,7 @@ namespace AlphaKilo_GameJam32
             sndExplode = mainGame.Content.Load<SoundEffect>("_Sounds_/explode");
 
             // Création du background de l'interface Utilisateur
-            World = new Sprite(mainGame.Content.Load<Texture2D>("_Images_/ui-background"));
+            World = new Sprite(mainGame.Content.Load<Texture2D>("_Images_/world-background"));
             World.position = new Vector2(1, 1);
 
             // Création du héro (car)
@@ -130,6 +130,7 @@ namespace AlphaKilo_GameJam32
                 if (actor is Ennemis ennemi)
                 {
 
+                    /*                   
                     ennemi.chronotir -= 1 * (gameTime.ElapsedGameTime.Milliseconds);
                     //Debug.WriteLine("Chronotir : " + ennemi.chronotir);
                     if(ennemi.chronotir <= 0)
@@ -143,6 +144,7 @@ namespace AlphaKilo_GameJam32
                         // Ajoute l'ennemi à la liste
                         listTirs.Add(MTir);
                     }
+                    */
 
                     if (ennemi.position.Y > Screen.Height - ennemi.texture.Height - 25)
                     {
