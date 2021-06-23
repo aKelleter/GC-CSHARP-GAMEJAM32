@@ -13,7 +13,6 @@ namespace AlphaKilo_GameJam32
     class Tools
     {
         static Random randomGen = new Random();
-        private static System.Timers.Timer aTimer;
         public enum SizeScreenType
         {
             Width,

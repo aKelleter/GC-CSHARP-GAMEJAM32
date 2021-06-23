@@ -12,11 +12,13 @@ namespace AlphaKilo_GameJam32
     {
         protected MainGame mainGame;
         protected List<IActor> listActors;
+        protected List<IActor> listTirs;
 
         public Scene (MainGame pGame)
         {
             mainGame = pGame;
             listActors = new List<IActor>();
+            listTirs = new List<IActor>();
         }
 
         public virtual void Load()
@@ -42,6 +44,11 @@ namespace AlphaKilo_GameJam32
             foreach (IActor actor in listActors)
             {
                 actor.Draw(mainGame._spriteBatch);
+            }
+
+            foreach (IActor tir in listTirs)
+            {
+                tir.Draw(mainGame._spriteBatch);
             }
         }
 

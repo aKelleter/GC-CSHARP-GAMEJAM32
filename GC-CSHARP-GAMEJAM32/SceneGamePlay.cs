@@ -16,6 +16,7 @@ namespace AlphaKilo_GameJam32
         private KeyboardState oldKBState;
         private Hero MyHero;
         private Ennemis MyEnnemi;
+        private Tirs MTir;
         private Sprite World;
         private Rectangle Screen;
         private Song music;
@@ -48,7 +49,7 @@ namespace AlphaKilo_GameJam32
             World.position = new Vector2(1, 1);
 
             // Création du héro (car)
-            MyHero = new Hero(mainGame.Content.Load<Texture2D>("_Images_/car"));
+            MyHero = new Hero(mainGame.Content.Load<Texture2D>("_Images_/hero"));
             MyHero.position = new Vector2((Screen.Width/2) - MyHero.texture.Width/2, (Screen.Height-100) - MyHero.texture.Height/2);
             // Ajouter à la liste de Sprites
             listActors.Add(MyHero);
@@ -57,7 +58,7 @@ namespace AlphaKilo_GameJam32
             {
                 // Création des Ennemis 
                 // Instanciation de l'objet
-                MyEnnemi = new Ennemis(mainGame.Content.Load<Texture2D>("_Images_/Ennemis"));
+                MyEnnemi = new Ennemis(mainGame.Content.Load<Texture2D>("_Images_/ennemis"));
 
                 // Initialisation de la position
                 MyEnnemi.position = new Vector2(
@@ -66,9 +67,6 @@ namespace AlphaKilo_GameJam32
                 // Ajoute l'ennemi à la liste
                 listActors.Add(MyEnnemi);
             }
-
-
-            
 
             // Chargement du Load() de Scene
             base.Load();
@@ -121,57 +119,42 @@ namespace AlphaKilo_GameJam32
                     MyHero.Move(0, +5);
             }
 
-            // Ajoute des ennemis
            
 
-            if (MyHero.energy > 30)
-            {
-                                
-                
-
-                
-            }
-
-            // Empêche les Ennemis de l'aire de jeu
+            // BOucle principale sur les ennemis
             foreach (IActor actor in listActors)
             {
 
-                //Debug.WriteLine("Type {0}", item.GetType());
+                //Debug.WriteLine("Type {0}", actor.GetType());
                
-                if (actor is Ennemis m)
+                if (actor is Ennemis ennemi)
                 {
-                    /*
-                    if (m.position.X > Screen.Width - m.texture.Width)
-                    {
-                        m.Velocity_X = 0 - m.Velocity_X;
-                        m.position = new Vector2(Screen.Width - m.texture.Width, m.position.Y); // repostionnement du météor pour éviter des bugs d'affichage
-                    }   
 
-                    if (m.position.X < 0)
+                    ennemi.chronotir -= 1 * (gameTime.ElapsedGameTime.Milliseconds);
+                    //Debug.WriteLine("Chronotir : " + ennemi.chronotir);
+                    if(ennemi.chronotir <= 0)
                     {
-                        m.Velocity_X = 0 - m.Velocity_X;
-                        m.position = new Vector2(0, m.position.Y);
-                    }
-                    */
-
-                    if (m.position.Y > Screen.Height - m.texture.Height - 25)
-                    {
-                        //m.Velocity_Y = 0 - m.Velocity_Y;
-                        m.position = new Vector2(m.position.X, Screen.Height + m.texture.Height);
-
+                        ennemi.chronotir = Tools.RandomInt(60, 100);
+                        MTir = new Tirs(mainGame.Content.Load<Texture2D>("_Images_/tir-e"));
+                        MTir.position= new Vector2(ennemi.position.X, ennemi.position.Y);
+                        MTir.Velocity_X = 0;
+                        MTir.Velocity_Y = 10;
+                        //Debug.WriteLine("Chronotir IN : " + ennemi.chronotir);
+                        // Ajoute l'ennemi à la liste
+                        listTirs.Add(MTir);
                     }
 
-                    if (m.position.Y < 50)
+                    if (ennemi.position.Y > Screen.Height - ennemi.texture.Height - 25)
                     {
-                        m.Velocity_Y = 0 - m.Velocity_Y;
-                        m.position = new Vector2(m.position.X, 0);
-                    }
+                        ennemi.position = new Vector2(ennemi.position.X, Screen.Height + ennemi.texture.Height);
+                        ennemi.ToRemove = true;
+                    }                   
 
-                    if (Tools.CollideByBox(m, MyHero))
+                    if (Tools.CollideByBox(ennemi, MyHero))
                     {
-                        MyHero.TouchedBy(m);
-                        m.TouchedBy(MyHero);
-                        m.ToRemove = true;
+                        MyHero.TouchedBy(ennemi);
+                        ennemi.TouchedBy(MyHero);
+                        ennemi.ToRemove = true;
                         sndExplode.Play();
                         
                     }                   
@@ -188,9 +171,6 @@ namespace AlphaKilo_GameJam32
             // listActors.RemoveAll(item => item.ToRemove == true);
             // OU
             CleanActors();
-
-
-
 
             // On sauvegarde le nouvel état du clavier dans l'ancien
             oldKBState = newKBState;
