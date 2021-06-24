@@ -11,13 +11,12 @@ namespace AlphaKilo_GameJam32
     public class Tirs : Sprite
     {
         public float life;
-        public int frame;
-        public int maxFrame; 
+        public float timePassed; 
+        
         public List<int> listFrameTirs;
         public Tirs(Texture2D pTexture) : base(pTexture)
         {
-            frame = 1;
-            maxFrame = 1;
+            timePassed = 0f;
             listFrameTirs = new List<int>();
         }
         public override void TouchedBy(IActor pActor)

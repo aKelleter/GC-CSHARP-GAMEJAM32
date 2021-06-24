@@ -64,8 +64,19 @@ namespace AlphaKilo_GameJam32
                 MyEnnemi.position = new Vector2(
                         Tools.RandomInt(230, Screen.Width - MyEnnemi.texture.Width - 230),
                         Tools.RandomInt(50, 65));
+
                 // Ajoute l'ennemi à la liste
                 listActors.Add(MyEnnemi);
+
+                MTir = new Tirs(mainGame.Content.Load<Texture2D>("_Images_/tir-e"));
+                MTir.position = new Vector2(MyEnnemi.position.X, MyEnnemi.position.Y);
+                MTir.Velocity_X = 0;
+                MTir.Velocity_Y = 5;               
+                //Debug.WriteLine("Chronotir IN : " + ennemi.chronotir);
+                // Ajoute l'ennemi à la liste
+                listTirs.Add(MTir);
+
+
             }
 
             // Chargement du Load() de Scene
@@ -81,6 +92,8 @@ namespace AlphaKilo_GameJam32
 
         public override void Update(GameTime gameTime)
         {
+            float timePassed = 0f;
+
             // Sauvegarde le nouvel état du clavier
             KeyboardState newKBState = Keyboard.GetState();
 
@@ -118,50 +131,48 @@ namespace AlphaKilo_GameJam32
                 if (MyHero.position.Y < Screen.Height - MyHero.texture.Height - 20)
                     MyHero.Move(0, +5);
             }
-
-           
-
+            timePassed += gameTime.ElapsedGameTime.Milliseconds;
             // BOucle principale sur les ennemis
             foreach (IActor actor in listActors)
             {
 
-                //Debug.WriteLine("Type {0}", actor.GetType());
-               
+                //Debug.WriteLine("Type {0}", actor.GetType());                
+                Debug.WriteLine("Time passed : " + timePassed);
+
+                // Si l'actor est un ennemi
                 if (actor is Ennemis ennemi)
                 {
 
-                    /*                   
-                    ennemi.chronotir -= 1 * (gameTime.ElapsedGameTime.Milliseconds);
-                    //Debug.WriteLine("Chronotir : " + ennemi.chronotir);
-                    if(ennemi.chronotir <= 0)
+                    if (timePassed > 500)
                     {
-                        ennemi.chronotir = Tools.RandomInt(60, 100);
                         MTir = new Tirs(mainGame.Content.Load<Texture2D>("_Images_/tir-e"));
-                        MTir.position= new Vector2(ennemi.position.X, ennemi.position.Y);
+                        MTir.position = new Vector2(ennemi.position.X, ennemi.position.Y);
                         MTir.Velocity_X = 0;
-                        MTir.Velocity_Y = 10;
+                        MTir.Velocity_Y = 5;
                         //Debug.WriteLine("Chronotir IN : " + ennemi.chronotir);
                         // Ajoute l'ennemi à la liste
                         listTirs.Add(MTir);
                     }
-                    */
 
+
+                    // Si l'ennemi arrive en bas de l'écran on le repositionne et on l'indique comme à supprimer
                     if (ennemi.position.Y > Screen.Height - ennemi.texture.Height - 25)
                     {
                         ennemi.position = new Vector2(ennemi.position.X, Screen.Height + ennemi.texture.Height);
                         ennemi.ToRemove = true;
                     }                   
-
+                    
+                    // Test la collision entre un ennemi et le héro
                     if (Tools.CollideByBox(ennemi, MyHero))
                     {
                         MyHero.TouchedBy(ennemi);
                         ennemi.TouchedBy(MyHero);
                         ennemi.ToRemove = true;
-                        sndExplode.Play();
-                        
+                        sndExplode.Play();                        
                     }                   
                 }
 
+                // Si le hero n'a plus d'énergie => Game Over
                 if (MyHero.energy <= 0)
                 {
                     mainGame.gameState.ChangeScene(GameState.SceneType.Gameover);
@@ -169,8 +180,37 @@ namespace AlphaKilo_GameJam32
 
             } // end foreach
 
-            // Supprime dans la liste d'Actors les item qui ont la propriété ToRemove à true
-            // listActors.RemoveAll(item => item.ToRemove == true);
+            
+
+            foreach (IActor actor in listActors)
+            {
+                timePassed += gameTime.ElapsedGameTime.Milliseconds;
+                Debug.WriteLine("Time passed : " + timePassed);
+                
+                if (actor is Ennemis ennemi)
+                {
+                    if (timePassed > 5f)
+                    {
+                        MTir = new Tirs(mainGame.Content.Load<Texture2D>("_Images_/tir-e"));
+                        MTir.position = new Vector2(MyEnnemi.position.X, MyEnnemi.position.Y);
+                        MTir.Velocity_X = 0;
+                        MTir.Velocity_Y = 5;
+                        //Debug.WriteLine("Chronotir IN : " + ennemi.chronotir);
+                        // Ajoute l'ennemi à la liste
+                        listTirs.Add(MTir);
+                    }
+                }              
+                
+            }
+
+
+            foreach (Tirs tir in listTirs)
+            {
+                tir.Move(0, MTir.Velocity_Y);
+            }
+
+            // Supprime dans la liste d'Actors les items qui ont la propriété ToRemove à true
+            // listActors.RemoveAll(actor => actor.ToRemove == true);
             // OU
             CleanActors();
 
