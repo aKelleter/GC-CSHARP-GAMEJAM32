@@ -14,7 +14,7 @@ namespace AlphaKilo_GameJam32
         public Vector2 position { get; set; }           // IActor IMPLEMENTATION
         public Rectangle boundingBox { get; set; }      // IActor IMPLEMENTATION
         public bool ToRemove { get; set; }              // IActor IMPLEMENTATION
-
+       
         public Texture2D texture { get; }               // Sprite IMPLEMENTATION
         public float Velocity_X { get; set; }           // Sprite IMPLEMENTATION
         public float Velocity_Y { get; set; }           // Sprite IMPLEMENTATION
@@ -32,13 +32,18 @@ namespace AlphaKilo_GameJam32
             boundingBox = new Rectangle((int)position.X, (int)position.Y, texture.Width, texture.Height );
         }
 
-        public virtual void TouchedBy(IActor pActor)            // IActor IMPLEMENTATION
+        public virtual void TouchedByActors(IActor pActor)     // IActor IMPLEMENTATION
+        {
+
+        }
+
+        public virtual void TouchedByTirs()            // IActor IMPLEMENTATION
         {
 
         }
 
         // -------------------------------------
-        
+
         // CONSTRUCTOR
         public Sprite(Texture2D pTexture)                        // Sprite IMPLEMENTATION
         {

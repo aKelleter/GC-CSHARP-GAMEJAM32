@@ -37,6 +37,11 @@ namespace AlphaKilo_GameJam32
             {
                 actor.Update(gameTime);
             }
+
+            foreach (Tirs tir in listTirs)
+            {
+                tir.Update(gameTime);
+            }
         }
 
         public virtual void Draw(GameTime gameTime)
@@ -46,15 +51,20 @@ namespace AlphaKilo_GameJam32
                 actor.Draw(mainGame._spriteBatch);
             }
 
-            foreach (IActor tir in listTirs)
+            foreach (Tirs tir in listTirs)
             {
-                tir.Draw(mainGame._spriteBatch);
+                tir.Draw(mainGame._spriteBatch);                                   
             }
         }
 
         public void CleanActors()
         {
             listActors.RemoveAll(item => item.ToRemove == true);
+        }
+
+        public void CleanTirs()
+        {
+            listTirs.RemoveAll(item => item.ToRemove == true);
         }
     }
 }

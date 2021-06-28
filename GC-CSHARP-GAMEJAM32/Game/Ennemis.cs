@@ -10,14 +10,10 @@ namespace AlphaKilo_GameJam32
 {
     public class Ennemis : Sprite
     {
-        public bool endormi;  
-        public int chronotir;
         public float energy;
         public Ennemis(Texture2D pTexture) : base(pTexture)
         {
             // Initialisations
-            endormi = true;       
-            chronotir = 0;
             energy = 100;
 
             // Vitesse de déplacement aléatoire sur l'axe des X
@@ -28,7 +24,7 @@ namespace AlphaKilo_GameJam32
 
         }
 
-        public override void TouchedBy(IActor pActor)
+        public override void TouchedByActors(IActor pActor)
         {
             if (pActor is Hero)
             {

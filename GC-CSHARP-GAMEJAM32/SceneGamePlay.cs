@@ -21,15 +21,22 @@ namespace AlphaKilo_GameJam32
         private Rectangle Screen;
         private Song music;
         private SoundEffect sndExplode;
-     
+
+        private float elapsedTime;
+        public float sequenceFireEnnemy;
+
+       
         public SceneGamePlay(MainGame pGame) : base(pGame)
         {
             Debug.WriteLine("New SceneGamePlay");
-            
         }
 
         public override void Load()
         {
+
+            elapsedTime = 0.0f;
+            sequenceFireEnnemy = 2.0f; // secondes
+
             Debug.WriteLine("SceneGamePlay.Load");
             oldKBState = Keyboard.GetState();
 
@@ -71,12 +78,11 @@ namespace AlphaKilo_GameJam32
                 MTir = new Tirs(mainGame.Content.Load<Texture2D>("_Images_/tir-e"));
                 MTir.position = new Vector2(MyEnnemi.position.X, MyEnnemi.position.Y);
                 MTir.Velocity_X = 0;
-                MTir.Velocity_Y = 5;               
+                MTir.Velocity_Y = 5;
+                 
                 //Debug.WriteLine("Chronotir IN : " + ennemi.chronotir);
                 // Ajoute l'ennemi à la liste
                 listTirs.Add(MTir);
-
-
             }
 
             // Chargement du Load() de Scene
@@ -92,8 +98,7 @@ namespace AlphaKilo_GameJam32
 
         public override void Update(GameTime gameTime)
         {
-            float timePassed = 0f;
-
+                       
             // Sauvegarde le nouvel état du clavier
             KeyboardState newKBState = Keyboard.GetState();
 
@@ -131,29 +136,33 @@ namespace AlphaKilo_GameJam32
                 if (MyHero.position.Y < Screen.Height - MyHero.texture.Height - 20)
                     MyHero.Move(0, +5);
             }
-            timePassed += gameTime.ElapsedGameTime.Milliseconds;
-            // BOucle principale sur les ennemis
+
+
+
+            // Parcours la boucle des Actors pour gérer les interactions avec les ennemis
+            // -------------------------------------------------------------------------
             foreach (IActor actor in listActors)
             {
-
-                //Debug.WriteLine("Type {0}", actor.GetType());                
-                Debug.WriteLine("Time passed : " + timePassed);
 
                 // Si l'actor est un ennemi
                 if (actor is Ennemis ennemi)
                 {
+                    elapsedTime += (((float)gameTime.ElapsedGameTime.Milliseconds)/1000)/20;
+                    //Debug.WriteLine("Time {0} / Sequence {1} / ElapsedGameTime {2}", elapsedTime, sequenceFireEnnemy, gameTime.ElapsedGameTime.Seconds);
 
-                    if (timePassed > 500)
+                    if (elapsedTime >= sequenceFireEnnemy)
                     {
+                        Debug.WriteLine("Fire !");
                         MTir = new Tirs(mainGame.Content.Load<Texture2D>("_Images_/tir-e"));
                         MTir.position = new Vector2(ennemi.position.X, ennemi.position.Y);
                         MTir.Velocity_X = 0;
                         MTir.Velocity_Y = 5;
-                        //Debug.WriteLine("Chronotir IN : " + ennemi.chronotir);
+
                         // Ajoute l'ennemi à la liste
                         listTirs.Add(MTir);
+                        // Remise è 0 du temps écoulé
+                        elapsedTime = 0.0f;
                     }
-
 
                     // Si l'ennemi arrive en bas de l'écran on le repositionne et on l'indique comme à supprimer
                     if (ennemi.position.Y > Screen.Height - ennemi.texture.Height - 25)
@@ -165,54 +174,58 @@ namespace AlphaKilo_GameJam32
                     // Test la collision entre un ennemi et le héro
                     if (Tools.CollideByBox(ennemi, MyHero))
                     {
-                        MyHero.TouchedBy(ennemi);
-                        ennemi.TouchedBy(MyHero);
-                        ennemi.ToRemove = true;
+                        Debug.WriteLine("Ennemy Collision");
+                        MyHero.TouchedByActors(ennemi);
+                        ennemi.TouchedByActors(MyHero);
+                        ennemi.ToRemove = true; 
                         sndExplode.Play();                        
-                    }                   
-                }
-
-                // Si le hero n'a plus d'énergie => Game Over
-                if (MyHero.energy <= 0)
-                {
-                    mainGame.gameState.ChangeScene(GameState.SceneType.Gameover);
-                }
-
+                    }
+                }           
             } // end foreach
+            // ----------------------------------------------------------------------
+
+            // Parcours de la liste des tirs pour mettre à jour la position / les collisions et les suppressions
+            // -------------------------------------------------------------------------------------------------
+            foreach (Tirs tir in listTirs)
+            {
+                // Application du mouvement
+                tir.Move(0, tir.Velocity_Y);
+
+                // Si il y a collision avec un tir et le héro
+                if (Tools.CollideByBox(tir, MyHero))
+                {
+                    Debug.WriteLine("Tir Collision");
+                    MyHero.TouchedByTirs();
+                    tir.TouchedByActors(MyHero);
+                    tir.ToRemove = true;
+                    sndExplode.Play();
+                }
+               
+
+                // Si le tir arrive en bas de l'écran
+                if (tir.position.Y > Screen.Height)
+                {
+                    tir.ToRemove = true;
+                    Debug.WriteLine("Tir ToRemove");
+                }
+            }            
+            // ----------------------------------------------------------------------------------------------------
 
             
 
-            foreach (IActor actor in listActors)
+
+            
+            // Suppression des Sprites marqués comme à supprimer
+            // -------------------------------------------------
+            CleanActors(); // ou => listActors.RemoveAll(actor => actor.ToRemove == true); 
+            CleanTirs();
+
+            // Si le hero n'a plus d'énergie => Game Over
+            // ------------------------------------------
+            if (MyHero.energy <= 0)
             {
-                timePassed += gameTime.ElapsedGameTime.Milliseconds;
-                Debug.WriteLine("Time passed : " + timePassed);
-                
-                if (actor is Ennemis ennemi)
-                {
-                    if (timePassed > 5f)
-                    {
-                        MTir = new Tirs(mainGame.Content.Load<Texture2D>("_Images_/tir-e"));
-                        MTir.position = new Vector2(MyEnnemi.position.X, MyEnnemi.position.Y);
-                        MTir.Velocity_X = 0;
-                        MTir.Velocity_Y = 5;
-                        //Debug.WriteLine("Chronotir IN : " + ennemi.chronotir);
-                        // Ajoute l'ennemi à la liste
-                        listTirs.Add(MTir);
-                    }
-                }              
-                
+                mainGame.gameState.ChangeScene(GameState.SceneType.Gameover);
             }
-
-
-            foreach (Tirs tir in listTirs)
-            {
-                tir.Move(0, MTir.Velocity_Y);
-            }
-
-            // Supprime dans la liste d'Actors les items qui ont la propriété ToRemove à true
-            // listActors.RemoveAll(actor => actor.ToRemove == true);
-            // OU
-            CleanActors();
 
             // On sauvegarde le nouvel état du clavier dans l'ancien
             oldKBState = newKBState;
@@ -220,10 +233,7 @@ namespace AlphaKilo_GameJam32
             base.Update(gameTime);
         }
 
-        private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            Debug.WriteLine("The Elapsed event was raised at {0}", e.SignalTime);
-        }
+        
 
         public override void Draw(GameTime gameTime)
         {

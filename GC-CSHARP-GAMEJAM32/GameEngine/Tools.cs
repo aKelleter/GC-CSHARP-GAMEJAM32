@@ -59,7 +59,7 @@ namespace AlphaKilo_GameJam32
         /**
          * Détection de collision entre deux box
          */
-        public static bool CollideByBox(IActor pBox1, IActor pBox2)
+        public static bool CollideByBox(Sprite pBox1, Sprite pBox2)
         {
             return pBox1.boundingBox.Intersects(pBox2.boundingBox);
         }

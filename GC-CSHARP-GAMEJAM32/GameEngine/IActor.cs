@@ -11,12 +11,13 @@ namespace AlphaKilo_GameJam32
         Vector2 position { get; }
         Rectangle boundingBox { get; }
         bool ToRemove { get; set; }
-
+       
         // ----------------------------
 
         void Update(GameTime pGameTime);
         void Draw(SpriteBatch pSpriteBatch);
-        void TouchedBy(IActor pActor);
+        void TouchedByActors(IActor pActor);
+        void TouchedByTirs();
         
         
 

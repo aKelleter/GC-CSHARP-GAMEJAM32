@@ -15,12 +15,17 @@ namespace AlphaKilo_GameJam32
         {
             energy = 100;
         }
-        public override void TouchedBy(IActor pActor)   
+        public override void TouchedByActors(IActor pActor)   
         {
             if(pActor is Ennemis)
             {
                 energy -= 10.0f;
             }
+        }
+
+        public override void TouchedByTirs()
+        {
+            energy -= 10.0f;        
         }
     }
 }

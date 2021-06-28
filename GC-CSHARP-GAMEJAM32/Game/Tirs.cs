@@ -10,20 +10,19 @@ namespace AlphaKilo_GameJam32
 {
     public class Tirs : Sprite
     {
-        public float life;
-        public float timePassed; 
-        
+        public float energy;               
         public List<int> listFrameTirs;
+
         public Tirs(Texture2D pTexture) : base(pTexture)
         {
-            timePassed = 0f;
-            listFrameTirs = new List<int>();
+           listFrameTirs = new List<int>();
+           energy = 100.0f;            
         }
-        public override void TouchedBy(IActor pActor)
+        public override void TouchedByActors(IActor pActor)
         {
-            if (pActor is Ennemis)
+            if (pActor is Hero)
             {
-                life -= 10.0f;
+                energy -= 100.0f;
             }
         }
     }
