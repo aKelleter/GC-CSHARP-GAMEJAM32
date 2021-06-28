@@ -21,6 +21,8 @@ namespace AlphaKilo_GameJam32
         private Rectangle Screen;
         private Song music;
         private SoundEffect sndExplode;
+        private int CountEnnemis;
+        private int CounterEnnemis;
 
         private float elapsedTime;
         public float sequenceFireEnnemy;
@@ -35,7 +37,9 @@ namespace AlphaKilo_GameJam32
         {
 
             elapsedTime = 0.0f;
-            sequenceFireEnnemy = 2.0f; // secondes
+            sequenceFireEnnemy = 1.0f; // secondes
+            CountEnnemis = 0;
+            CounterEnnemis = 0;
 
             Debug.WriteLine("SceneGamePlay.Load");
             oldKBState = Keyboard.GetState();
@@ -61,7 +65,7 @@ namespace AlphaKilo_GameJam32
             // Ajouter à la liste de Sprites
             listActors.Add(MyHero);
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 50; i++)
             {
                 // Création des Ennemis 
                 // Instanciation de l'objet
@@ -75,12 +79,12 @@ namespace AlphaKilo_GameJam32
                 // Ajoute l'ennemi à la liste
                 listActors.Add(MyEnnemi);
 
+                // Lance une salve de tir pour chacun des Ennemis
                 MTir = new Tirs(mainGame.Content.Load<Texture2D>("_Images_/tir-e"));
                 MTir.position = new Vector2(MyEnnemi.position.X, MyEnnemi.position.Y);
                 MTir.Velocity_X = 0;
                 MTir.Velocity_Y = 5;
                  
-                //Debug.WriteLine("Chronotir IN : " + ennemi.chronotir);
                 // Ajoute l'ennemi à la liste
                 listTirs.Add(MTir);
             }
@@ -137,10 +141,23 @@ namespace AlphaKilo_GameJam32
                     MyHero.Move(0, +5);
             }
 
+            if (newKBState.IsKeyDown(Keys.Space) && !oldKBState.IsKeyDown(Keys.Space))
+            {
+                MTir = new Tirs(mainGame.Content.Load<Texture2D>("_Images_/tir-e"));
+                MTir.position = new Vector2(MyHero.position.X, MyHero.position.Y - MyHero.texture.Height);
+                MTir.Velocity_X = 0;
+                MTir.Velocity_Y = -5;
+
+                // Ajoute l'ennemi à la liste
+                listTirs.Add(MTir);
+
+                MTir.Move(0, MTir.Velocity_Y);
+            }
+
 
 
             // Parcours la boucle des Actors pour gérer les interactions avec les ennemis
-            // -------------------------------------------------------------------------
+            // ----------------------------------------------------------------------------------------------------
             foreach (IActor actor in listActors)
             {
 
@@ -152,7 +169,7 @@ namespace AlphaKilo_GameJam32
 
                     if (elapsedTime >= sequenceFireEnnemy)
                     {
-                        Debug.WriteLine("Fire !");
+                        //Debug.WriteLine("Fire !");
                         MTir = new Tirs(mainGame.Content.Load<Texture2D>("_Images_/tir-e"));
                         MTir.position = new Vector2(ennemi.position.X, ennemi.position.Y);
                         MTir.Velocity_X = 0;
@@ -160,8 +177,18 @@ namespace AlphaKilo_GameJam32
 
                         // Ajoute l'ennemi à la liste
                         listTirs.Add(MTir);
+
                         // Remise è 0 du temps écoulé
                         elapsedTime = 0.0f;
+                    }
+
+                    // Test la collision entre un ennemi et un tir
+                    if (Tools.CollideByBox(ennemi, MTir))
+                    {
+                        //ennemi.TouchedByTirs();
+                        MTir.TouchedByActors(ennemi);
+                        ennemi.ToRemove = true;
+                        sndExplode.Play();
                     }
 
                     // Si l'ennemi arrive en bas de l'écran on le repositionne et on l'indique comme à supprimer
@@ -174,7 +201,7 @@ namespace AlphaKilo_GameJam32
                     // Test la collision entre un ennemi et le héro
                     if (Tools.CollideByBox(ennemi, MyHero))
                     {
-                        Debug.WriteLine("Ennemy Collision");
+                        //Debug.WriteLine("Ennemy Collision");
                         MyHero.TouchedByActors(ennemi);
                         ennemi.TouchedByActors(MyHero);
                         ennemi.ToRemove = true; 
@@ -182,10 +209,11 @@ namespace AlphaKilo_GameJam32
                     }
                 }           
             } // end foreach
-            // ----------------------------------------------------------------------
+            // ----------------------------------------------------------------------------------------------------
 
             // Parcours de la liste des tirs pour mettre à jour la position / les collisions et les suppressions
-            // -------------------------------------------------------------------------------------------------
+            // ----------------------------------------------------------------------------------------------------
+
             foreach (Tirs tir in listTirs)
             {
                 // Application du mouvement
@@ -194,40 +222,69 @@ namespace AlphaKilo_GameJam32
                 // Si il y a collision avec un tir et le héro
                 if (Tools.CollideByBox(tir, MyHero))
                 {
-                    Debug.WriteLine("Tir Collision");
+                    //Debug.WriteLine("Tir Collision");
                     MyHero.TouchedByTirs();
                     tir.TouchedByActors(MyHero);
                     tir.ToRemove = true;
                     sndExplode.Play();
                 }
-               
+
 
                 // Si le tir arrive en bas de l'écran
                 if (tir.position.Y > Screen.Height)
                 {
                     tir.ToRemove = true;
-                    Debug.WriteLine("Tir ToRemove");
+                    //Debug.WriteLine("Tir ToRemove");
                 }
             }            
             // ----------------------------------------------------------------------------------------------------
 
-            
-
-
-            
+                                    
             // Suppression des Sprites marqués comme à supprimer
-            // -------------------------------------------------
+            // ----------------------------------------------------------------------------------------------------
             CleanActors(); // ou => listActors.RemoveAll(actor => actor.ToRemove == true); 
             CleanTirs();
+            // ----------------------------------------------------------------------------------------------------
+
+
+            // FIN DU JEU -----------------------------------------------------------------------------------------
+            // ----------------------------------------------------------------------------------------------------
 
             // Si le hero n'a plus d'énergie => Game Over
-            // ------------------------------------------
+            // ----------------------------------------------------------------------------------------------------
             if (MyHero.energy <= 0)
             {
                 mainGame.gameState.ChangeScene(GameState.SceneType.Gameover);
             }
 
+            // Si il n'y a plus d'ennemis => Game Win
+            // ----------------------------------------------------------------------------------------------------
+            foreach (IActor actor in listActors)
+            {
+                // Si l'actor est un ennemi
+                if (actor is Ennemis itemEnnemi)
+                {
+                    CountEnnemis++;
+                    //Debug.WriteLine("Add ennemi to count");
+                }                
+            }
+
+            // On enregistre le nbre d'ennemis dans compteur
+            CounterEnnemis = CountEnnemis;
+            CountEnnemis = 0;
+            
+            //Debug.WriteLine("Count Ennemi " + CounterEnnemis);
+
+            // Si il n'y a plus d'ennemis on redirige vers la page de victoire
+            if (CounterEnnemis <= 0)
+            {
+                mainGame.gameState.ChangeScene(GameState.SceneType.Gamewin);
+            }
+            // --------------------------------------------------------------------------------------------------
+
+
             // On sauvegarde le nouvel état du clavier dans l'ancien
+            // --------------------------------------------------------------------------------------------------
             oldKBState = newKBState;
 
             base.Update(gameTime);

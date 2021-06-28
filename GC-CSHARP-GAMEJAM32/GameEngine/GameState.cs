@@ -17,6 +17,7 @@ namespace AlphaKilo_GameJam32
             Menu,
             Gameplay,
             Gameover,
+            Gamewin
         }
 
         protected MainGame mainGame;
@@ -46,6 +47,9 @@ namespace AlphaKilo_GameJam32
                     break;
                 case SceneType.Gameover:
                     CurrentScene = new SceneGameOver(mainGame);
+                    break;
+                case SceneType.Gamewin:
+                    CurrentScene = new SceneGameWin(mainGame);
                     break;
                 default:
                     break;

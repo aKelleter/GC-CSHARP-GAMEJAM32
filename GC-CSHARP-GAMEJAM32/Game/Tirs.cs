@@ -10,12 +10,11 @@ namespace AlphaKilo_GameJam32
 {
     public class Tirs : Sprite
     {
-        public float energy;               
-        public List<int> listFrameTirs;
-
+        public float energy;             
+       
         public Tirs(Texture2D pTexture) : base(pTexture)
         {
-           listFrameTirs = new List<int>();
+           
            energy = 100.0f;            
         }
         public override void TouchedByActors(IActor pActor)
@@ -23,6 +22,11 @@ namespace AlphaKilo_GameJam32
             if (pActor is Hero)
             {
                 energy -= 100.0f;
+            }
+
+            if (pActor is Ennemis)
+            {
+                energy -= 50.0f;
             }
         }
     }

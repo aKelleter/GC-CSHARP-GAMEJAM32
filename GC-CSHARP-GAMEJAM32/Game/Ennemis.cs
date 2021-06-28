@@ -14,7 +14,7 @@ namespace AlphaKilo_GameJam32
         public Ennemis(Texture2D pTexture) : base(pTexture)
         {
             // Initialisations
-            energy = 100;
+            energy = 100.0f;
 
             // Vitesse de déplacement aléatoire sur l'axe des X
             do
@@ -30,6 +30,11 @@ namespace AlphaKilo_GameJam32
             {
                 energy -= 10.0f;
             }
+        }
+
+        public override void TouchedByTirs()
+        {
+            energy -= 100.0f;
         }
 
     }
