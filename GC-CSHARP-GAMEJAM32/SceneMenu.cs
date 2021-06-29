@@ -9,7 +9,7 @@ using System.Text;
 
 namespace AlphaKilo_GameJam32
 {
-    public class SceneMenu : Scene
+    public class SceneMenu : SceneManager
     {
 
         private KeyboardState oldKBState;
@@ -60,7 +60,7 @@ namespace AlphaKilo_GameJam32
             buttonGamePlay.onClick = onCLickPlay;
 
             // Ajout du bouton à la liste des Sprites
-            listActors.Add(buttonGamePlay);
+            listSprites.Add(buttonGamePlay);
 
             base.Load();
         }

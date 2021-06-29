@@ -11,7 +11,7 @@ using System.Timers;
 
 namespace AlphaKilo_GameJam32
 {
-    public class SceneGamePlay : Scene
+    public class SceneGamePlay : SceneManager
     {
         private KeyboardState oldKBState;
         private Hero MyHero;
@@ -23,6 +23,7 @@ namespace AlphaKilo_GameJam32
         private SoundEffect sndExplode;
         private int CountEnnemis;
         private int CounterEnnemis;
+        private int generateNbrEnnemies;
 
         private float elapsedTime;
         public float sequenceFireEnnemy;
@@ -30,18 +31,20 @@ namespace AlphaKilo_GameJam32
        
         public SceneGamePlay(MainGame pGame) : base(pGame)
         {
-            Debug.WriteLine("New SceneGamePlay");
+            //Debug.WriteLine("New SceneGamePlay");
         }
 
         public override void Load()
         {
 
+            // Initialisations
             elapsedTime = 0.0f;
             sequenceFireEnnemy = 1.0f; // secondes
             CountEnnemis = 0;
             CounterEnnemis = 0;
+            generateNbrEnnemies = 50;
 
-            Debug.WriteLine("SceneGamePlay.Load");
+            //Debug.WriteLine("SceneGamePlay.Load");
             oldKBState = Keyboard.GetState();
 
             // Taille de l'écran
@@ -63,9 +66,11 @@ namespace AlphaKilo_GameJam32
             MyHero = new Hero(mainGame.Content.Load<Texture2D>("_Images_/hero"));
             MyHero.position = new Vector2((Screen.Width/2) - MyHero.texture.Width/2, (Screen.Height-100) - MyHero.texture.Height/2);
             // Ajouter à la liste de Sprites
-            listActors.Add(MyHero);
+            listSprites.Add(MyHero);
 
-            for (int i = 0; i < 50; i++)
+            // Création des Ennemis
+            // ----------------------------------------------------------------------------------------------------
+            for (int i = 0; i <= generateNbrEnnemies; i++)
             {
                 // Création des Ennemis 
                 // Instanciation de l'objet
@@ -74,19 +79,21 @@ namespace AlphaKilo_GameJam32
                 // Initialisation de la position
                 MyEnnemi.position = new Vector2(
                         Tools.RandomInt(230, Screen.Width - MyEnnemi.texture.Width - 230),
-                        Tools.RandomInt(50, 65));
+                        Tools.RandomInt(50, 70));
 
                 // Ajoute l'ennemi à la liste
-                listActors.Add(MyEnnemi);
-
+                listSprites.Add(MyEnnemi);
+                
                 // Lance une salve de tir pour chacun des Ennemis
                 MTir = new Tirs(mainGame.Content.Load<Texture2D>("_Images_/tir-e"));
-                MTir.position = new Vector2(MyEnnemi.position.X, MyEnnemi.position.Y);
+                MTir.position = new Vector2(MyEnnemi.position.X, MyEnnemi.position.Y + MyEnnemi.texture.Height + 1);
+                //Debug.WriteLine("Ennemi pos x {0} - Ennemi pos y {1} - Pos y tir {2} -", MyEnnemi.position.X, MyEnnemi.position.Y, MyEnnemi.position.Y + MyEnnemi.texture.Height + 5);
                 MTir.Velocity_X = 0;
                 MTir.Velocity_Y = 5;
                  
                 // Ajoute l'ennemi à la liste
                 listTirs.Add(MTir);
+                
             }
 
             // Chargement du Load() de Scene
@@ -95,7 +102,7 @@ namespace AlphaKilo_GameJam32
 
         public override void UnLoad()
         {
-            Debug.WriteLine("SceneGamePlay.Unload");
+            //Debug.WriteLine("SceneGamePlay.Unload");
             MediaPlayer.Stop();
             base.UnLoad();
         }
@@ -109,18 +116,23 @@ namespace AlphaKilo_GameJam32
             // Si la touche LEFTCONTROL est enfoncée on Accélère
             if (Keyboard.GetState().IsKeyDown(Keys.LeftControl))
             {
-                Debug.WriteLine("LeftControl Key is down = Acceleration");
+                //Debug.WriteLine("LeftControl Key is down = Acceleration");
             }
 
             // Si la touche M est enfoncée et qu'elle ne l'était pas avant on charge le Menu
             if (newKBState.IsKeyDown(Keys.M) && !oldKBState.IsKeyDown(Keys.M))
             {
-                Debug.WriteLine("M Key is down, back to Menu");
                 mainGame.gameState.ChangeScene(GameState.SceneType.Menu);
             }
 
-            // Contrôler les mouvements de MyHero
-            if(newKBState.IsKeyDown(Keys.Left))
+            // Si la touche R on recharge le Gameplay (jeu)
+            if ((newKBState.IsKeyDown(Keys.R) && !oldKBState.IsKeyDown(Keys.R)))
+            {
+                mainGame.gameState.ChangeScene(GameState.SceneType.Gameplay);
+            }
+
+            // Contrôler les mouvements du héro
+            if (newKBState.IsKeyDown(Keys.Left))
             {
                 if(MyHero.position.X > 220)
                     MyHero.Move(-5, 0); 
@@ -149,100 +161,107 @@ namespace AlphaKilo_GameJam32
                 MTir.Velocity_Y = -5;
 
                 // Ajoute l'ennemi à la liste
-                listTirs.Add(MTir);
-
-                MTir.Move(0, MTir.Velocity_Y);
+                listTirs.Add(MTir);               
             }
-
-
 
             // Parcours la boucle des Actors pour gérer les interactions avec les ennemis
             // ----------------------------------------------------------------------------------------------------
-            foreach (IActor actor in listActors)
+            foreach (ISpriteManager sprite in listSprites)
             {
-
-                // Si l'actor est un ennemi
-                if (actor is Ennemis ennemi)
+                // Si le sprite est un ennemi
+                if (sprite is Ennemis ennemi)
                 {
                     elapsedTime += (((float)gameTime.ElapsedGameTime.Milliseconds)/1000)/20;
                     //Debug.WriteLine("Time {0} / Sequence {1} / ElapsedGameTime {2}", elapsedTime, sequenceFireEnnemy, gameTime.ElapsedGameTime.Seconds);
 
+                    // Si le temps écoulé est supérieur à la séquence de mise à feu
+                    // On Crée un tir avec ml'ennemi en cours dans la boucle
                     if (elapsedTime >= sequenceFireEnnemy)
                     {
                         //Debug.WriteLine("Fire !");
                         MTir = new Tirs(mainGame.Content.Load<Texture2D>("_Images_/tir-e"));
-                        MTir.position = new Vector2(ennemi.position.X, ennemi.position.Y);
+                        MTir.position = new Vector2(ennemi.position.X, ennemi.position.Y + ennemi.texture.Height + 1);
                         MTir.Velocity_X = 0;
                         MTir.Velocity_Y = 5;
 
                         // Ajoute l'ennemi à la liste
                         listTirs.Add(MTir);
 
+                        // Applique la vélocité au tir
+                        MTir.Move(0, MTir.Velocity_Y);
+
                         // Remise è 0 du temps écoulé
                         elapsedTime = 0.0f;
                     }
 
-                    // Test la collision entre un ennemi et un tir
-                    if (Tools.CollideByBox(ennemi, MTir))
+                    // Parcours de la liste des tirs pour mettre à jour la position / les collisions et les suppressions
+                    // ----------------------------------------------------------------------------------------------------
+                    foreach (Tirs tir in listTirs)
                     {
-                        //ennemi.TouchedByTirs();
-                        MTir.TouchedByActors(ennemi);
-                        ennemi.ToRemove = true;
-                        sndExplode.Play();
+                        // Si il y a collision avec un tir et le héro
+                        if (Tools.CollideByBox(tir, MyHero))
+                        {
+                            //Debug.WriteLine("Collision Tir/Hero");                    
+                            if(tir.Energy > 0)
+                            {
+                                tir.DamageOnSprite(MyHero);
+                            }                            
+                            tir.ToRemove = true;
+                            tir.Energy = 0;
+                            sndExplode.Play();
+                        }
+
+                        if (Tools.CollideByBox(ennemi, tir))
+                        {
+                            //Debug.WriteLine("Collision Tir/ennemi");
+                            if (tir.Energy > 0)
+                            {
+                                tir.DamageOnSprite(ennemi);
+                            }
+                            tir.ToRemove = true;
+                            tir.Energy = 0;                                                 
+                            ennemi.ToRemove = true;                            
+                            sndExplode.Play();
+                        }
+
+                        // Si le tir arrive en bas de l'écran
+                        if (tir.position.Y > Screen.Height)
+                        {
+                            tir.ToRemove = true;
+                            //Debug.WriteLine("Tir ToRemove");
+                        }
+                    }
+                    // ----------------------------------------------------------------------------------------------------
+                   
+                    // Test la collision entre un ennemi et le héro
+                    if (Tools.CollideByBox(ennemi, MyHero))
+                    {
+                        //Debug.WriteLine("Ennemy Collision");
+                        MyHero.DamageOnSprite(ennemi);
+                        ennemi.DamageOnSprite(MyHero);
+                        ennemi.ToRemove = true; 
+                        sndExplode.Play();                        
                     }
 
                     // Si l'ennemi arrive en bas de l'écran on le repositionne et on l'indique comme à supprimer
                     if (ennemi.position.Y > Screen.Height - ennemi.texture.Height - 25)
                     {
-                        ennemi.position = new Vector2(ennemi.position.X, Screen.Height + ennemi.texture.Height);
+                        //ennemi.position = new Vector2(ennemi.position.X, Screen.Height + ennemi.texture.Height);
                         ennemi.ToRemove = true;
-                    }                   
-                    
-                    // Test la collision entre un ennemi et le héro
-                    if (Tools.CollideByBox(ennemi, MyHero))
-                    {
-                        //Debug.WriteLine("Ennemy Collision");
-                        MyHero.TouchedByActors(ennemi);
-                        ennemi.TouchedByActors(MyHero);
-                        ennemi.ToRemove = true; 
-                        sndExplode.Play();                        
+                        // Crée un dégât au héro
+                        ennemi.DamageOnSprite(MyHero);
                     }
-                }           
+                }               
             } // end foreach
-            // ----------------------------------------------------------------------------------------------------
 
-            // Parcours de la liste des tirs pour mettre à jour la position / les collisions et les suppressions
-            // ----------------------------------------------------------------------------------------------------
-
-            foreach (Tirs tir in listTirs)
-            {
-                // Application du mouvement
-                tir.Move(0, tir.Velocity_Y);
-
-                // Si il y a collision avec un tir et le héro
-                if (Tools.CollideByBox(tir, MyHero))
-                {
-                    //Debug.WriteLine("Tir Collision");
-                    MyHero.TouchedByTirs();
-                    tir.TouchedByActors(MyHero);
-                    tir.ToRemove = true;
-                    sndExplode.Play();
-                }
-
-
-                // Si le tir arrive en bas de l'écran
-                if (tir.position.Y > Screen.Height)
-                {
-                    tir.ToRemove = true;
-                    //Debug.WriteLine("Tir ToRemove");
-                }
-            }            
-            // ----------------------------------------------------------------------------------------------------
-
-                                    
             // Suppression des Sprites marqués comme à supprimer
             // ----------------------------------------------------------------------------------------------------
-            CleanActors(); // ou => listActors.RemoveAll(actor => actor.ToRemove == true); 
+            CleanSprites(); // ou => listSprites.RemoveAll(sprite => sprite.ToRemove == true); 
+            // ----------------------------------------------------------------------------------------------------          
+
+                                    
+            // Suppression des Tirs marqués comme à supprimer
+            // ----------------------------------------------------------------------------------------------------            
             CleanTirs();
             // ----------------------------------------------------------------------------------------------------
 
@@ -252,17 +271,17 @@ namespace AlphaKilo_GameJam32
 
             // Si le hero n'a plus d'énergie => Game Over
             // ----------------------------------------------------------------------------------------------------
-            if (MyHero.energy <= 0)
+            if (MyHero.Energy <= 0)
             {
                 mainGame.gameState.ChangeScene(GameState.SceneType.Gameover);
             }
 
             // Si il n'y a plus d'ennemis => Game Win
             // ----------------------------------------------------------------------------------------------------
-            foreach (IActor actor in listActors)
+            foreach (ISpriteManager sprite in listSprites)
             {
-                // Si l'actor est un ennemi
-                if (actor is Ennemis itemEnnemi)
+                // Si le sprite est un ennemi
+                if (sprite is Ennemis itemEnnemi)
                 {
                     CountEnnemis++;
                     //Debug.WriteLine("Add ennemi to count");
@@ -290,12 +309,10 @@ namespace AlphaKilo_GameJam32
             base.Update(gameTime);
         }
 
-        
-
         public override void Draw(GameTime gameTime)
         {
             mainGame._spriteBatch.Draw(World.texture, new Vector2(World.position.X, World.position.Y), Color.White);
-            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Energy:  "+MyHero.energy, new Vector2(50, 20), Color.White);  
+            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Energy:  "+MyHero.Energy, new Vector2(50, 20), Color.White);  
             mainGame._spriteBatch.DrawString(AssetManager.mainFont, "V " + mainGame.strVersion, new Vector2(Screen.Width-140, Screen.Height - 50), new Color(.2f, .4f, .3f, .1f));
             base.Draw(gameTime);
         }

@@ -10,22 +10,18 @@ namespace AlphaKilo_GameJam32
 {
     public class Hero : Sprite
     {
-        public float energy;
         public Hero(Texture2D pTexture) : base(pTexture) 
         {
-            energy = 100;
+            Energy = 100;
         }
-        public override void TouchedByActors(IActor pActor)   
+                
+        public override void DamageOnSprite(ISpriteManager pSprite)   
         {
-            if(pActor is Ennemis)
+            if(pSprite is Ennemis)
             {
-                energy -= 10.0f;
+                pSprite.Energy -= 100.0f;
             }
         }
 
-        public override void TouchedByTirs()
-        {
-            energy -= 10.0f;        
-        }
     }
 }

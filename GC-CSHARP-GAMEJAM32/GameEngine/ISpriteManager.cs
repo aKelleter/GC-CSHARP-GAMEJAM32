@@ -6,20 +6,19 @@ using System.Text;
 
 namespace AlphaKilo_GameJam32
 {
-    public interface IActor
+    public interface ISpriteManager
     {
         Vector2 position { get; }
         Rectangle boundingBox { get; }
         bool ToRemove { get; set; }
-       
+        float Energy { get; set; }
+
         // ----------------------------
 
         void Update(GameTime pGameTime);
         void Draw(SpriteBatch pSpriteBatch);
-        void TouchedByActors(IActor pActor);
-        void TouchedByTirs();
-        
-        
+        void DamageOnSprite(ISpriteManager pActor);
+
 
     }
 }

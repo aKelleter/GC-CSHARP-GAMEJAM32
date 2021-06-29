@@ -8,8 +8,6 @@ using System.Diagnostics;
 
 namespace AlphaKilo_GameJam32
 {
-
-    
     public class GameState
     {
         public enum SceneType
@@ -21,7 +19,7 @@ namespace AlphaKilo_GameJam32
         }
 
         protected MainGame mainGame;
-        public Scene CurrentScene { get; set; }
+        public SceneManager CurrentScene { get; set; }
         public GameState(MainGame pGame)
         {
             mainGame = pGame;

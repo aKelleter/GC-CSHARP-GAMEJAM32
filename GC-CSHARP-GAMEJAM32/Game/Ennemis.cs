@@ -10,11 +10,10 @@ namespace AlphaKilo_GameJam32
 {
     public class Ennemis : Sprite
     {
-        public float energy;
         public Ennemis(Texture2D pTexture) : base(pTexture)
         {
             // Initialisations
-            energy = 100.0f;
+            Energy = 100.0f;
 
             // Vitesse de déplacement aléatoire sur l'axe des X
             do
@@ -23,18 +22,14 @@ namespace AlphaKilo_GameJam32
             } while (Velocity_Y == 0);
 
         }
-
-        public override void TouchedByActors(IActor pActor)
+        
+        public override void DamageOnSprite(ISpriteManager pSprite)
         {
-            if (pActor is Hero)
+            if (pSprite is Hero)
             {
-                energy -= 10.0f;
+                pSprite.Energy -= 10.0f;
             }
-        }
-
-        public override void TouchedByTirs()
-        {
-            energy -= 100.0f;
+            
         }
 
     }

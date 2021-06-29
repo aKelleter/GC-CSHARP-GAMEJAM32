@@ -8,17 +8,17 @@ using System.Diagnostics;
 
 namespace AlphaKilo_GameJam32
 {
-    abstract public class Scene
+    abstract public class SceneManager
     {
         protected MainGame mainGame;
-        protected List<IActor> listActors;
-        protected List<IActor> listTirs;
+        protected List<ISpriteManager> listSprites;
+        protected List<ISpriteManager> listTirs;
 
-        public Scene (MainGame pGame)
+        public SceneManager (MainGame pGame)
         {
             mainGame = pGame;
-            listActors = new List<IActor>();
-            listTirs = new List<IActor>();
+            listSprites = new List<ISpriteManager>();
+            listTirs = new List<ISpriteManager>();
         }
 
         public virtual void Load()
@@ -33,7 +33,7 @@ namespace AlphaKilo_GameJam32
 
         public virtual void Update(GameTime gameTime)
         {
-            foreach (IActor actor in listActors)
+            foreach (ISpriteManager actor in listSprites)
             {
                 actor.Update(gameTime);
             }
@@ -46,7 +46,7 @@ namespace AlphaKilo_GameJam32
 
         public virtual void Draw(GameTime gameTime)
         {
-            foreach (IActor actor in listActors)
+            foreach (ISpriteManager actor in listSprites)
             {
                 actor.Draw(mainGame._spriteBatch);
             }
@@ -57,9 +57,9 @@ namespace AlphaKilo_GameJam32
             }
         }
 
-        public void CleanActors()
+        public void CleanSprites()
         {
-            listActors.RemoveAll(item => item.ToRemove == true);
+            listSprites.RemoveAll(item => item.ToRemove == true);
         }
 
         public void CleanTirs()
