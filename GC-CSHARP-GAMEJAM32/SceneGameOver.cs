@@ -54,7 +54,7 @@ namespace AlphaKilo_GameJam32
         public override void Draw(GameTime gameTime)
         {
          
-            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Game Over !", new Vector2((Screen.Width/2) - 60, Screen.Height / 2), Color.White);
+            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Game Over !", new Vector2((Screen.Width/2) - 60, Screen.Height / 2), Color.Red);
             mainGame._spriteBatch.DrawString(AssetManager.mainFont, "\n Click on \"R\" key to restart Game", new Vector2((Screen.Width / 2) - 200, Screen.Height / 2), Color.White);
 
             base.Draw(gameTime);

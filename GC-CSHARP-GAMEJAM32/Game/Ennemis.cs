@@ -15,10 +15,10 @@ namespace AlphaKilo_GameJam32
             // Initialisations
             Energy = 100.0f;
 
-            // Vitesse de déplacement aléatoire sur l'axe des X
+            // Vitesse de déplacement aléatoire sur l'axe des Y
             do
             {
-                Velocity_Y = (float)Tools.RandomInt(1, 6) / 5;
+                Velocity_Y = (float)Tools.RandomInt(5, 10) / 5;
             } while (Velocity_Y == 0);
 
         }

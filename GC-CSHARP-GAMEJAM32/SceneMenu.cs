@@ -138,7 +138,7 @@ namespace AlphaKilo_GameJam32
             mainGame._spriteBatch.Draw(MenuBackgr.texture, new Vector2(MenuBackgr.position.X, MenuBackgr.position.Y), Color.White);
             mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Or press Enter key", new Vector2(70, ScreenHeight / 2 + 20), new Color(.5f, .7f, .1f, 1.0f));
             mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Gamejam 32 - www.gamecodeur.fr", new Vector2(445, 133), new Color(.9f, .7f, .1f, 1.0f));
-            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Work in progress...\n\nExplanations:\n- Kill all enemies\n- Several shots are necessary\n\nThis game is a prototype :)", new Vector2(600, ScreenHeight / 2 -100), new Color(.9f, .7f, .1f, 1.0f));
+            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Work in progress...\n\nExplanations:\n- Kill all enemies\n- Space bar to shoot\n- Left and Right arrows to move  \n\nThis game is a prototype :)", new Vector2(600, ScreenHeight / 2 -100), new Color(.9f, .7f, .1f, 1.0f));
             mainGame._spriteBatch.DrawString(AssetManager.mainFont, "V " + mainGame.strVersion, new Vector2(ScreenWidth-100, ScreenHeight - 50), new Color(.2f, .3f, .4f, 1.0f));
             base.Draw(gameTime);
            

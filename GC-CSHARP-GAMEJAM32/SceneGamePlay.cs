@@ -42,7 +42,7 @@ namespace AlphaKilo_GameJam32
             sequenceFireEnnemy = 1.0f; // secondes
             CountEnnemis = 0;
             CounterEnnemis = 0;
-            generateNbrEnnemies = 50;
+            generateNbrEnnemies = 135;
 
             //Debug.WriteLine("SceneGamePlay.Load");
             oldKBState = Keyboard.GetState();
@@ -72,8 +72,8 @@ namespace AlphaKilo_GameJam32
             // ----------------------------------------------------------------------------------------------------
             for (int i = 0; i <= generateNbrEnnemies; i++)
             {
-                // Création des Ennemis 
-                // Instanciation de l'objet
+                // Création des Ennemis
+                // ------------------------------------------------------------------------------------------------
                 MyEnnemi = new Ennemis(mainGame.Content.Load<Texture2D>("_Images_/ennemis"));
 
                 // Initialisation de la position
@@ -83,8 +83,9 @@ namespace AlphaKilo_GameJam32
 
                 // Ajoute l'ennemi à la liste
                 listSprites.Add(MyEnnemi);
-                
+
                 // Lance une salve de tir pour chacun des Ennemis
+                // ------------------------------------------------------------------------------------------------
                 MTir = new Tirs(mainGame.Content.Load<Texture2D>("_Images_/tir-e"));
                 MTir.position = new Vector2(MyEnnemi.position.X, MyEnnemi.position.Y + MyEnnemi.texture.Height + 1);
                 //Debug.WriteLine("Ennemi pos x {0} - Ennemi pos y {1} - Pos y tir {2} -", MyEnnemi.position.X, MyEnnemi.position.Y, MyEnnemi.position.Y + MyEnnemi.texture.Height + 5);
@@ -205,10 +206,10 @@ namespace AlphaKilo_GameJam32
                             if(tir.Energy > 0)
                             {
                                 tir.DamageOnSprite(MyHero);
+                                sndExplode.Play();
                             }                            
                             tir.ToRemove = true;
-                            tir.Energy = 0;
-                            sndExplode.Play();
+                            tir.Energy = 0;                            
                         }
 
                         if (Tools.CollideByBox(ennemi, tir))
@@ -217,11 +218,11 @@ namespace AlphaKilo_GameJam32
                             if (tir.Energy > 0)
                             {
                                 tir.DamageOnSprite(ennemi);
+                                sndExplode.Play();
                             }
                             tir.ToRemove = true;
                             tir.Energy = 0;                                                 
-                            ennemi.ToRemove = true;                            
-                            sndExplode.Play();
+                            ennemi.ToRemove = true;                                                        
                         }
 
                         // Si le tir arrive en bas de l'écran
@@ -313,6 +314,7 @@ namespace AlphaKilo_GameJam32
         {
             mainGame._spriteBatch.Draw(World.texture, new Vector2(World.position.X, World.position.Y), Color.White);
             mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Energy:  "+MyHero.Energy, new Vector2(50, 20), Color.White);  
+            mainGame._spriteBatch.DrawString(AssetManager.mainFont, "Enemies:  "+ CounterEnnemis, new Vector2(50, 50), Color.GreenYellow);  
             mainGame._spriteBatch.DrawString(AssetManager.mainFont, "V " + mainGame.strVersion, new Vector2(Screen.Width-140, Screen.Height - 50), new Color(.2f, .4f, .3f, .1f));
             base.Draw(gameTime);
         }
