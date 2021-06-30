@@ -11,7 +11,7 @@ namespace AlphaKilo_GameJam32
         public GraphicsDeviceManager _graphics;
         public SpriteBatch _spriteBatch;
         public GameState gameState;
-        public String strVersion = "0.0.4";
+        public String strVersion = "0.0.5";
 
         public RenderTarget2D render;
         private int TargetWidth = 1024;

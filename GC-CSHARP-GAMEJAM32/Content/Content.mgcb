@@ -42,7 +42,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:_Images_/ennemis.png;_Images_/ennemi.png
+/build:_Images_/ennemis.png
 
 #begin _Images_/hero.png
 /importer:TextureImporter
