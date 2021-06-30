@@ -6,4 +6,6 @@ Game name : The Bridge Of Hell 2097
 
 https://alaxor.itch.io/the-bridge-of-hell
 
+GameJam : https://itch.io/jam/gamecodeur-gamejam-32
+
 Organized by : https://www.gamecodeur.fr
